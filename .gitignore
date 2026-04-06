@@ -1,0 +1,13 @@
+.env
+biblioteca.db
+
+fastapi-app.tar
+*.tar
+
+.idea/
+*.iml
+
+__pycache__/
+*.pyc
+
+.venv/
