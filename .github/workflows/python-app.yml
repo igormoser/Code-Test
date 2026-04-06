@@ -8,8 +8,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
 
     env:
       LOGIN: teste
@@ -21,10 +19,9 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Configurar Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v5
         with:
           python-version: "3.14"
-          cache: "poetry"
 
       - name: Instalar Poetry
         run: pip install poetry
@@ -35,5 +32,5 @@ jobs:
       - name: Rodar testes
         run: poetry run pytest
 
-      - name: Gerar build do projeto
+      - name: Build do projeto
         run: poetry build
