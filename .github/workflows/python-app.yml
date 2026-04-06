@@ -1,0 +1,39 @@
+name: CI/CD FastAPI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    env:
+      LOGIN: teste
+      PASSWORD: teste
+      DATABASE_URL: sqlite:///./test.db
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v3
+
+      - name: Configurar Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.14"
+          cache: "poetry"
+
+      - name: Instalar Poetry
+        run: pip install poetry
+
+      - name: Instalar dependências
+        run: poetry install --no-root --no-interaction
+
+      - name: Rodar testes
+        run: poetry run pytest
+
+      - name: Gerar build do projeto
+        run: poetry build
