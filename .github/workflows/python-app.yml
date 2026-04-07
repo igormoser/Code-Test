@@ -13,24 +13,34 @@ jobs:
       LOGIN: teste
       PASSWORD: teste
       DATABASE_URL: sqlite:///./test.db
-      REDIS_HOST: localhost
-      REDIS_PORT: 6379
-      REDIS_URL: redis://localhost:6379/0
 
     steps:
-      - name: Checkout do código
+      - name: Checkout code
         uses: actions/checkout@v5
 
-      - name: Configurar Python
+      - name: Setup Python
         uses: actions/setup-python@v6
         with:
-          python-version: "3.14"
+          python-version: '3.14'
 
-      - name: Instalar Poetry
+      - name: Install Poetry
         run: pip install poetry
 
-      - name: Instalar dependências
+      - name: Install dependencies
         run: poetry install --no-root --no-interaction
 
-      - name: Rodar testes
+      - name: Run tests
         run: poetry run pytest
+
+      - name: Build Docker image
+        run: docker build -t fastapi-app:latest .
+
+      - name: Run Docker container
+        run: docker run -d --name fastapi-app -p 8000:8000 -e LOGIN=teste -e PASSWORD=teste -e DATABASE_URL=sqlite:///./test.db fastapi-app:latest
+
+      - name: Check container
+        run: docker ps | grep fastapi-app
+
+      - name: Remove container
+        if: always()
+        run: docker rm -f fastapi-app || true
